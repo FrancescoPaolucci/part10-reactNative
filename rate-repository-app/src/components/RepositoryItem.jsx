@@ -1,34 +1,36 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, StyleSheet, Text, Image, Pressable } from 'react-native';
 import theme from '../theme';
-const Item = ({
-  fullName,
-  description,
-  language,
-  forksCount,
-  stargazersCount,
-  ratingAverage,
-  reviewCount,
-  ownerAvatarUrl,
-}) => (
-  <View style={styles.item}>
-    <View>
-      <Image
-        style={styles.profilepic}
-        source={{
-          uri: ownerAvatarUrl,
-        }}
-      />
-      <Text style={styles.name}>{fullName} </Text>
-    </View>
-    <Text>{description} </Text>
-    <Text style={styles.language}>{language} </Text>
-    <Text>forks:{forksCount} </Text>
-    <Text>Stars:{stargazersCount} </Text>
-    <Text>review:{reviewCount} </Text>
-    <Text>reting:{ratingAverage} </Text>
-  </View>
-);
+import { useHistory } from 'react-router-native';
+const Item = ({ fullName, description, language, forksCount, stargazersCount, ratingAverage, reviewCount, ownerAvatarUrl, id }) => {
+  const history = useHistory();
+
+  return (
+    <Pressable onPress={() => history.push(`/singlerepo/${id}`)}>
+      <View style={styles.item}>
+        <View>
+          <Image
+            style={styles.profilepic}
+            source={{
+              uri: ownerAvatarUrl,
+            }}
+          />
+          <Text style={styles.name} testID='fullName'>
+            {fullName}{' '}
+          </Text>
+        </View>
+        <Text testID='description'>{description} </Text>
+        <Text style={styles.language} testID='language'>
+          {language}{' '}
+        </Text>
+        <Text testID='forksCount'>forks:{forksCount} </Text>
+        <Text testID='stargazersCount'>Stars:{stargazersCount} </Text>
+        <Text testID='reviewCount'>review:{reviewCount} </Text>
+        <Text testID='ratingAverage'>reting:{ratingAverage} </Text>
+      </View>
+    </Pressable>
+  );
+};
 const styles = StyleSheet.create({
   item: {
     backgroundColor: '#0000',

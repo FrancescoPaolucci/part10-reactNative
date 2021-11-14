@@ -33,7 +33,7 @@ const AppBar = () => {
   const signOut = async () => {
     await authStorage.removeAccessToken();
     await apolloClient.resetStore();
-    history.push('/signin');
+    history.push('/');
   };
 
   if (!data) {
@@ -59,6 +59,18 @@ const AppBar = () => {
           <Pressable>
             <Text style={styles.text}>{data.authorizedUser.username}</Text>
           </Pressable>
+          <Text> </Text>
+          <Pressable>
+            <Link to='/reviewform'>
+              <Text style={styles.text}> Add Your Review!</Text>
+            </Link>
+          </Pressable>
+          <Text> </Text>
+          <Pressable>
+            <Link to='/myreviews'>
+              <Text style={styles.text}>My Reviews</Text>
+            </Link>
+          </Pressable>
         </ScrollView>
       </View>
     );
@@ -74,6 +86,12 @@ const AppBar = () => {
         <Pressable style={styles.signin}>
           <Link to='/signin'>
             <Text style={styles.text}> SingIn</Text>
+          </Link>
+        </Pressable>
+        <Text> </Text>
+        <Pressable>
+          <Link to='/signupform'>
+            <Text style={styles.text}> SignUp</Text>
           </Link>
         </Pressable>
       </ScrollView>

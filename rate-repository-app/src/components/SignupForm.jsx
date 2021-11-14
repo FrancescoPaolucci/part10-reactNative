@@ -5,17 +5,20 @@ import Text from './Text';
 import FormikTextInput from './FormikTextInput';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import useSignIn from '../hooks/useSignIn';
+import useSignUp from '../hooks/useSignUp';
 import theme from '../theme';
+
 const initialValues = {
   username: '',
   password: '',
 };
-const SignInform = ({ onSubmit }) => {
+
+const SignupForm = ({ onSubmit }) => {
   return (
     <View>
-      <FormikTextInput testID='usernameField' name='username' placeholder='username' />
-      <FormikTextInput testID='passwordField' secureTextEntry={true} name='password' placeholder='password' />
+      <FormikTextInput name='username' placeholder='username' />
+      <FormikTextInput secureTextEntry={true} name='password' placeholder='password' />
+      <FormikTextInput secureTextEntry={true} name='passwordConfirm' placeholder='password' />
       <Pressable style={styles.button} onPress={onSubmit}>
         <Text testID='submitButton' style={styles.text}>
           Submit
@@ -26,37 +29,41 @@ const SignInform = ({ onSubmit }) => {
 };
 
 const validationSchema = yup.object().shape({
-  username: yup.string().required('Username is required'),
-  password: yup.string().required('Password is required'),
+  username: yup.string().required('Username required').min(1, ' Min length  1!').max(30, 'Max Length 30!'),
+  password: yup.string().required('Password required').min(5, 'Min length 5!').max(30, ' Max Length  30!'),
+  passwordConfirm: yup
+    .string()
+    .oneOf([yup.ref('password'), null])
+    .required('Password confirm is required'),
 });
-export const SignInContainer = ({ onSubmit }) => {
+
+export const SignUpContainer = ({ onSubmit }) => {
   return (
     <View>
       <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-        {({ handleSubmit }) => <SignInform onSubmit={handleSubmit} />}
+        {({ handleSubmit }) => <SignupForm onSubmit={handleSubmit} />}
       </Formik>
     </View>
   );
 };
 
-const SignIn = () => {
-  const [signIn] = useSignIn();
+const SignUpForm = () => {
+  const [register] = useSignUp();
   const history = useHistory();
   const onSubmit = async (values) => {
     const username = String(values.username);
     const password = String(values.password);
     console.log('U', username, 'P', password);
     try {
-      const { data } = await signIn({ username, password });
+      await register({ username, password });
       history.push('/list');
-      console.log('Logged in', data);
     } catch (error) {
       console.log('Error', error);
     }
   };
   return (
     <View>
-      <SignInContainer onSubmit={onSubmit} />
+      <SignUpContainer onSubmit={onSubmit} />
     </View>
   );
 };
@@ -82,4 +89,4 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.main,
   },
 });
-export default SignIn;
+export default SignUpForm;
